@@ -1,5 +1,7 @@
 package com.fit.health_insurance.auth;
 
+import com.fit.health_insurance.exception.AuthenticationException;
+import com.fit.health_insurance.exception.EmailExistedException;
 import com.fit.health_insurance.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.util.Date;
 
 
@@ -36,19 +37,22 @@ public class AuthenticationService {
                     .id(savedUser.getId())
                     .email(savedUser.getEmail())
                     .build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (RuntimeException ex) {
+            throw new EmailExistedException("The email is existed");
         }
-
     }
 
-    public AuthenticationResponseDto login(AuthenticationRequestDto request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+    public AuthenticationResponseDto login(AuthenticationRequestDto request) throws AuthenticationException {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (RuntimeException ex) {
+            throw new AuthenticationException("Email and password do not match");
+        }
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -69,12 +73,16 @@ public class AuthenticationService {
     public AuthenticationResponseDto refresh(RefreshTokenRequestDto refreshTokenRequest) throws AuthenticationException {
         final String refreshToken = refreshTokenRequest.getRefreshToken();
         if (refreshToken != null) {
-            var userEmail = jwtService.extractEmail(refreshToken);
-            var user = userService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateAccessToken(user);
-                saveUserToken((User) user, accessToken);
-                return new AuthenticationResponseDto(accessToken, refreshToken);
+            try {
+                var userEmail = jwtService.extractEmail(refreshToken);
+                var user = userService.loadUserByUsername(userEmail);
+                if (jwtService.isTokenValid(refreshToken, user)) {
+                    var accessToken = jwtService.generateAccessToken(user);
+                    saveUserToken((User) user, accessToken);
+                    return new AuthenticationResponseDto(refreshToken, accessToken);
+                }
+            } catch (RuntimeException ex) {
+                throw new AuthenticationException("Refresh token not valid");
             }
         }
         throw new AuthenticationException("Refresh token not found");
