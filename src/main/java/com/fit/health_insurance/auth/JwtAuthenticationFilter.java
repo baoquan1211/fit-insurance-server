@@ -1,5 +1,7 @@
 package com.fit.health_insurance.auth;
 
+import com.fit.health_insurance.exception.AuthenticationException;
+import com.fit.health_insurance.user.User;
 import com.fit.health_insurance.user.UserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,11 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         final String jwtToken = authHeader.substring(7);
-        final String userEmail = jwtService.extractEmail(jwtToken);
+        final String userEmail;
+        try {
+            userEmail = jwtService.extractEmail(jwtToken);
+        } catch (RuntimeException ex) {
+            throw new AuthenticationException("Token is invalid or expired");
+        }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwtToken, userDetails)) {
+            if (jwtService.isTokenValid(jwtToken, userDetails) && jwtService.isTokenRevoked(jwtToken, (User) userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );

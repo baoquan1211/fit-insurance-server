@@ -1,5 +1,6 @@
-package com.fit.health_insurance.user;
+package com.fit.health_insurance.user.dto;
 
+import com.fit.health_insurance.user.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserDto {
-    private Integer id;
     private String name;
     private String address;
     private String phone;

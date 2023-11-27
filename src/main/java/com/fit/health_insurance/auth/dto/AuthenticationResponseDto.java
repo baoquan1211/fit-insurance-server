@@ -1,4 +1,4 @@
-package com.fit.health_insurance.auth;
+package com.fit.health_insurance.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

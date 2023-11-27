@@ -2,16 +2,16 @@ package com.fit.health_insurance.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ITokenRepository extends JpaRepository<Token, Integer> {
-    @Query(value = "SELECT token FROM auth_tokens AS t INNER JOIN app_users AS u" +
-            "ON t.user_id = u.id" +
-            "WHERE u.id = :id AND (t.isExpired = false AND t.isRevoked = false)", nativeQuery = true
-    )
-    List<Token> findAllValidTokenByUser(Integer id);
+    @Query(value = "SELECT TOKEN FROM REFRESH_TOKENS AS T INNER JOIN USERS AS U" +
+            " ON T.USER_ID = U.ID WHERE U.ID = :id AND T.IS_REVOKED = false", nativeQuery = true)
+    List<String> findAllValidTokenByUser(@Param("id") Integer id);
 
+    @Query(value = "SELECT * FROM REFRESH_TOKENS WHERE TOKEN = :token", nativeQuery = true)
     Optional<Token> findByToken(String token);
 }

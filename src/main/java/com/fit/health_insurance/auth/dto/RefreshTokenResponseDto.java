@@ -1,0 +1,14 @@
+package com.fit.health_insurance.auth.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RefreshTokenResponseDto {
+    @JsonProperty("access")
+    private String accessToken;
+}

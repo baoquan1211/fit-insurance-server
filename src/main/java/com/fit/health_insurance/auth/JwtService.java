@@ -1,11 +1,14 @@
 package com.fit.health_insurance.auth;
 
 
+import com.fit.health_insurance.auth.ITokenRepository;
+import com.fit.health_insurance.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,7 +18,9 @@ import java.util.*;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+    private final ITokenRepository tokenRepository;
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
     @Value("${application.security.jwt.access-token.expiration}")
@@ -52,6 +57,20 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String emailInToken = extractEmail(token);
         return (userDetails.getUsername().equals(emailInToken)) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenRevoked(String token, User user) {
+        var listValidTokenByEmail = tokenRepository.findAllValidTokenByUser(user.getId());
+        return listValidTokenByEmail.contains(token);
+    }
+
+    public void revokeToken(String token) {
+        var storedToken = tokenRepository.findByToken(token);
+        storedToken.ifPresent(value -> {
+            value.setRevoked(true);
+            tokenRepository.save(value);
+        });
+
     }
 
     private String buildToken(
