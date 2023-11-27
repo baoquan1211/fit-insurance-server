@@ -36,7 +36,6 @@ public class AuthenticationService {
         try {
             var savedUser = userRepository.save(user);
             return UserDto.builder()
-                    .id(savedUser.getId())
                     .email(savedUser.getEmail())
                     .build();
         } catch (RuntimeException ex) {
