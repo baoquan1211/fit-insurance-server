@@ -1,8 +1,8 @@
-package com.fit.health_insurance.auth;
+package com.fit.health_insurance.auth.service;
 
 import com.fit.health_insurance.exception.AuthenticationException;
-import com.fit.health_insurance.user.User;
-import com.fit.health_insurance.user.UserDetailsService;
+import com.fit.health_insurance.user.model.User;
+import com.fit.health_insurance.user.service.UserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwtToken, userDetails) && jwtService.isTokenRevoked(jwtToken, (User) userDetails)) {
+            //&& jwtService.isTokenRevoked(jwtToken, (User) userDetails)
+            if (jwtService.isTokenValid(jwtToken, userDetails) ) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );

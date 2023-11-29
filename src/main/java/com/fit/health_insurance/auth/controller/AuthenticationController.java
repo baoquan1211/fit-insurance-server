@@ -1,5 +1,6 @@
-package com.fit.health_insurance.auth;
+package com.fit.health_insurance.auth.controller;
 
+import com.fit.health_insurance.auth.service.AuthenticationService;
 import com.fit.health_insurance.auth.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.user.dto.UserDto;
@@ -52,6 +53,12 @@ public class AuthenticationController {
     ) throws AuthenticationException {
         var RefreshTokenResponseDto = authenticationService.refresh(request);
         return ResponseEntity.ok(RefreshTokenResponseDto);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> test(
+    ) throws AuthenticationException {
+        return ResponseEntity.ok("Test");
     }
 
 

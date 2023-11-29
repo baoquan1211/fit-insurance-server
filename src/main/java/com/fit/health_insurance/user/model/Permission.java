@@ -1,4 +1,4 @@
-package com.fit.health_insurance.user;
+package com.fit.health_insurance.user.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

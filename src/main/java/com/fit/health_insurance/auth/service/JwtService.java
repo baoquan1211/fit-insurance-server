@@ -1,8 +1,8 @@
-package com.fit.health_insurance.auth;
+package com.fit.health_insurance.auth.service;
 
 
-import com.fit.health_insurance.auth.ITokenRepository;
-import com.fit.health_insurance.user.User;
+import com.fit.health_insurance.auth.repository.TokenRepository;
+import com.fit.health_insurance.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-    private final ITokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
     @Value("${application.security.jwt.access-token.expiration}")

@@ -1,4 +1,4 @@
-package com.fit.health_insurance.user;
+package com.fit.health_insurance.user.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
