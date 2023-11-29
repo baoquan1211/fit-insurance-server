@@ -1,4 +1,4 @@
-package com.fit.health_insurance.auth.model;
+package com.fit.health_insurance.security.model;
 
 import com.fit.health_insurance.user.model.User;
 import jakarta.persistence.*;

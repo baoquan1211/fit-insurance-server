@@ -1,4 +1,4 @@
-package com.fit.health_insurance.user.model;
+package com.fit.health_insurance.user.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

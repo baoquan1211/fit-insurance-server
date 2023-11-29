@@ -1,5 +1,6 @@
 package com.fit.health_insurance.user.model;
 
+import com.fit.health_insurance.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

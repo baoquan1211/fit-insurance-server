@@ -1,6 +1,6 @@
-package com.fit.health_insurance.auth.repository;
+package com.fit.health_insurance.security.repository;
 
-import com.fit.health_insurance.auth.model.Token;
+import com.fit.health_insurance.security.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

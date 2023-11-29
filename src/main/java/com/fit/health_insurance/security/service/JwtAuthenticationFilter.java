@@ -1,8 +1,7 @@
-package com.fit.health_insurance.auth.service;
+package com.fit.health_insurance.security.service;
 
 import com.fit.health_insurance.exception.AuthenticationException;
-import com.fit.health_insurance.user.model.User;
-import com.fit.health_insurance.user.service.UserDetailsService;
+import com.fit.health_insurance.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(
@@ -44,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = this.userService.loadUserByUsername(userEmail);
             //&& jwtService.isTokenRevoked(jwtToken, (User) userDetails)
             if (jwtService.isTokenValid(jwtToken, userDetails) ) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

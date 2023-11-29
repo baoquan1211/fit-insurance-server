@@ -1,4 +1,4 @@
-package com.fit.health_insurance.auth.dto;
+package com.fit.health_insurance.security.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

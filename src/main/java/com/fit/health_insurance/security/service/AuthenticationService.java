@@ -1,18 +1,19 @@
-package com.fit.health_insurance.auth.service;
+package com.fit.health_insurance.security.service;
 
-import com.fit.health_insurance.auth.model.Token;
-import com.fit.health_insurance.auth.repository.TokenRepository;
-import com.fit.health_insurance.auth.dto.*;
+import com.fit.health_insurance.security.model.Token;
+import com.fit.health_insurance.security.repository.TokenRepository;
+import com.fit.health_insurance.security.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.exception.EmailExistedException;
 import com.fit.health_insurance.user.dto.UserDto;
-import com.fit.health_insurance.user.model.Role;
+import com.fit.health_insurance.user.enums.Role;
 import com.fit.health_insurance.user.model.User;
 import com.fit.health_insurance.user.repository.UserRepository;
-import com.fit.health_insurance.user.service.UserDetailsService;
+import com.fit.health_insurance.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
-    private final UserDetailsService userService;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
@@ -47,18 +48,20 @@ public class AuthenticationService {
             throw new EmailExistedException("The email is existed");
         }
     }
-
-    public AuthenticationResponseDto login(AuthenticationRequestDto request) throws AuthenticationException {
+    private void usernamePasswordAuthentication(String username, String password) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
+                            username,
+                            password
                     )
             );
         } catch (RuntimeException ex) {
             throw new AuthenticationException("Email and password do not match");
         }
+    }
+    public AuthenticationResponseDto login(AuthenticationRequestDto request) throws AuthenticationException {
+        usernamePasswordAuthentication(request.getEmail(), request.getPassword());
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -67,16 +70,7 @@ public class AuthenticationService {
     }
 
     public void changePassword(ResetPasswordRequestDto request) throws AuthenticationException {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getLastPassword()
-                    )
-            );
-        } catch (RuntimeException ex) {
-            throw new AuthenticationException("Email and password do not match");
-        }
+        usernamePasswordAuthentication(request.getEmail(), request.getLastPassword());
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
@@ -84,6 +78,7 @@ public class AuthenticationService {
 
     public void logout(RefreshTokenRequestDto request) throws AuthenticationException {
         jwtService.revokeToken(request.getRefreshToken());
+        SecurityContextHolder.clearContext();
     }
 
     private void saveUserToken(User user, String jwtToken) {

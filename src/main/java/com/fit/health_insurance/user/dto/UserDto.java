@@ -1,6 +1,6 @@
 package com.fit.health_insurance.user.dto;
 
-import com.fit.health_insurance.user.model.Role;
+import com.fit.health_insurance.user.enums.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;

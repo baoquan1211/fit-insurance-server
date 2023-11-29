@@ -10,7 +10,6 @@ import java.util.Date;
 @Data
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "personal_documents")
 public class PersonalDocument {
     @Id
@@ -23,7 +22,12 @@ public class PersonalDocument {
     @JoinColumn(name = "registration_form_id")
     private RegistrationForm registrationForm;
 
+    public PersonalDocument() {
+        this.createdAt = new Date();
+    }
+
     public PersonalDocument(RegistrationForm formEntity) {
         this.registrationForm = formEntity;
+        this.createdAt = new Date();
     }
 }

@@ -1,6 +1,6 @@
 package com.fit.health_insurance.config;
 
-import com.fit.health_insurance.user.service.UserDetailsService;
+import com.fit.health_insurance.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class AuthenticationConfig {
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -24,7 +24,7 @@ public class AuthenticationConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

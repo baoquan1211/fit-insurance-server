@@ -1,5 +1,6 @@
 package com.fit.health_insurance.insurance_registration.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,12 +20,14 @@ import java.util.List;
 @NoArgsConstructor
 public class RegistrationFormRequestDto implements Serializable {
     @NotEmpty(message = "The email is required")
+    @Email(message = "The email is not valid")
     private String email;
     @NotEmpty(message = "The name is required")
     private String name;
     @NotEmpty(message = "The birthday is required")
     private String birthday;
     @NotEmpty(message = "The identityCard is required")
+    @Size(min = 8, max = 12, message = "The identityCard must be 8 or 12 numbers")
     private String identityCard;
     @NotEmpty(message = "The phone number is required")
     @Size(min = 10, max = 11, message = "Phone number must be between 10 and 11 numbers")

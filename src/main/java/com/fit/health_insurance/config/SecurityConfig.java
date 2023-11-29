@@ -1,6 +1,6 @@
 package com.fit.health_insurance.config;
 
-import com.fit.health_insurance.auth.service.JwtAuthenticationFilter;
+import com.fit.health_insurance.security.service.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
-
+    private static final String[] WHITE_LIST_URLS = {
+            "/api/v1/login",
+            "/api/v1/register",
+            "/api/v1/refresh",
+            "/api/v1/logout",
+            "/api/v1/insurances"
+    };
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -30,10 +36,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers("/api/v1/login").permitAll()
-                                .requestMatchers("/api/v1/register").permitAll()
-                                .requestMatchers("/api/v1/refresh").permitAll()
-                                .requestMatchers("/api/v1/logout").permitAll()
+                                .requestMatchers(WHITE_LIST_URLS).permitAll()
                                 .anyRequest().authenticated()
 
                 )

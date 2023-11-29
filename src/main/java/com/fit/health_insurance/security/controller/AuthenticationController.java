@@ -1,7 +1,7 @@
-package com.fit.health_insurance.auth.controller;
+package com.fit.health_insurance.security.controller;
 
-import com.fit.health_insurance.auth.service.AuthenticationService;
-import com.fit.health_insurance.auth.dto.*;
+import com.fit.health_insurance.security.service.AuthenticationService;
+import com.fit.health_insurance.security.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.user.dto.UserDto;
 import jakarta.validation.Valid;
@@ -54,12 +54,4 @@ public class AuthenticationController {
         var RefreshTokenResponseDto = authenticationService.refresh(request);
         return ResponseEntity.ok(RefreshTokenResponseDto);
     }
-
-    @PostMapping("/test")
-    public ResponseEntity<String> test(
-    ) throws AuthenticationException {
-        return ResponseEntity.ok("Test");
-    }
-
-
 }
