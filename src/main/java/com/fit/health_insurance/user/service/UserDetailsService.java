@@ -1,6 +1,7 @@
-package com.fit.health_insurance.user;
+package com.fit.health_insurance.user.service;
 
-import lombok.AllArgsConstructor;
+import com.fit.health_insurance.exception.NotFoundException;
+import com.fit.health_insurance.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
-    private final IUserRepository repo;
+    private final UserRepository repo;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetails loadUserByUsername(String email) throws NotFoundException {
+        return repo.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
     }
 }

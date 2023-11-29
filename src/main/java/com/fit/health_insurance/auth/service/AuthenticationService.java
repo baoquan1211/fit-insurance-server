@@ -1,10 +1,15 @@
-package com.fit.health_insurance.auth;
+package com.fit.health_insurance.auth.service;
 
+import com.fit.health_insurance.auth.model.Token;
+import com.fit.health_insurance.auth.repository.TokenRepository;
 import com.fit.health_insurance.auth.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.exception.EmailExistedException;
-import com.fit.health_insurance.user.*;
 import com.fit.health_insurance.user.dto.UserDto;
+import com.fit.health_insurance.user.model.Role;
+import com.fit.health_insurance.user.model.User;
+import com.fit.health_insurance.user.repository.UserRepository;
+import com.fit.health_insurance.user.service.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,11 +22,11 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
     private final UserDetailsService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final ITokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserDto register(RegisterRequestDto request) {

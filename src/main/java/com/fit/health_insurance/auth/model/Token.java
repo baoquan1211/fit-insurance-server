@@ -1,6 +1,6 @@
-package com.fit.health_insurance.auth;
+package com.fit.health_insurance.auth.model;
 
-import com.fit.health_insurance.user.User;
+import com.fit.health_insurance.user.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
