@@ -1,7 +1,7 @@
-package com.fit.health_insurance.auth.service;
+package com.fit.health_insurance.security.service;
 
 
-import com.fit.health_insurance.auth.repository.TokenRepository;
+import com.fit.health_insurance.security.repository.TokenRepository;
 import com.fit.health_insurance.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

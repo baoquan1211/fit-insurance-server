@@ -1,5 +1,8 @@
 package com.fit.health_insurance.insurance_registration.model;
 
+import com.fit.health_insurance.insurance.enums.Period;
+import com.fit.health_insurance.insurance.model.Insurance;
+import com.fit.health_insurance.insurance_registration.enums.RegistrationStatus;
 import com.fit.health_insurance.user.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -17,11 +20,9 @@ public class RegistrationForm {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registrator_id")
     private User registrator;
-
     private String name;
     private LocalDate birthday;
     private String identityCard;
@@ -33,6 +34,11 @@ public class RegistrationForm {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "approved_by")
     private User approvedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insurance_id")
+    private Insurance insurance;
+    @Enumerated(EnumType.STRING)
+    private Period periodPay;
     private Date createdAt;
     public RegistrationForm() {
         this.createdAt = new Date();

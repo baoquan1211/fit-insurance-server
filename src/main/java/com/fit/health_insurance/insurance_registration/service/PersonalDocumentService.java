@@ -36,7 +36,6 @@ public class PersonalDocumentService {
                 .name(entity.getName())
                 .build();
     }
-
     public void save(PersonalDocument personalDocument) {
         personalDocumentRepository.save(personalDocument);
     }
