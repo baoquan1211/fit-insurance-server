@@ -15,7 +15,7 @@ public class NotFoundExceptionHandler {
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<?> handle(RuntimeException ex, HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
-        result.put("errors", ex.getMessage());
+        result.put("error", ex.getMessage());
         return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 }

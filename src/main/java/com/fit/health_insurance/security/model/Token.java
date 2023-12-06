@@ -1,6 +1,6 @@
 package com.fit.health_insurance.security.model;
 
-import com.fit.health_insurance.user.model.User;
+import com.fit.health_insurance.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "refresh_tokens")
+@Table(name = "refresh_token")
 public class Token {
     @Id
     @GeneratedValue

@@ -3,7 +3,6 @@ package com.fit.health_insurance.security.controller;
 import com.fit.health_insurance.security.service.AuthenticationService;
 import com.fit.health_insurance.security.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
-import com.fit.health_insurance.user.dto.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(
+    public void register(
             @Valid @RequestBody RegisterRequestDto request
     ) {
-        return ResponseEntity.ok(authenticationService.register(request));
+        authenticationService.register(request);
     }
 
     @PostMapping("/login")
