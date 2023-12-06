@@ -5,11 +5,10 @@ import com.fit.health_insurance.security.repository.TokenRepository;
 import com.fit.health_insurance.security.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.exception.EmailExistedException;
-import com.fit.health_insurance.user.dto.UserDto;
-import com.fit.health_insurance.user.enums.Role;
-import com.fit.health_insurance.user.model.User;
-import com.fit.health_insurance.user.repository.UserRepository;
-import com.fit.health_insurance.user.service.UserService;
+import com.fit.health_insurance.enums.Role;
+import com.fit.health_insurance.model.User;
+import com.fit.health_insurance.repository.UserRepository;
+import com.fit.health_insurance.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +29,7 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDto register(RegisterRequestDto request) {
+    public void register(RegisterRequestDto request) {
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -40,10 +39,7 @@ public class AuthenticationService {
                 .createdAt(new Date())
                 .build();
         try {
-            var savedUser = userRepository.save(user);
-            return UserDto.builder()
-                    .email(savedUser.getEmail())
-                    .build();
+            userRepository.save(user);
         } catch (RuntimeException ex) {
             throw new EmailExistedException("The email is existed");
         }
@@ -102,9 +98,9 @@ public class AuthenticationService {
                     return new RefreshTokenResponseDto(accessToken);
                 }
             } catch (RuntimeException ex) {
-                throw new AuthenticationException("Refresh token not valid");
+                throw new AuthenticationException("Refresh token not valid.");
             }
         }
-        throw new AuthenticationException("Refresh token is not valid or expired");
+        throw new AuthenticationException("Refresh token is not valid or expired.");
     }
 }

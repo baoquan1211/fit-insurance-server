@@ -2,7 +2,7 @@ package com.fit.health_insurance.security.service;
 
 
 import com.fit.health_insurance.security.repository.TokenRepository;
-import com.fit.health_insurance.user.model.User;
+import com.fit.health_insurance.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -83,6 +83,10 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
+//                .claim("authorities",
+//                        grantedAuthorities.stream()
+//                                .map(GrantedAuthority::getAuthority)
+//                                .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();

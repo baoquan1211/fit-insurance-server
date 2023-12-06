@@ -1,6 +1,6 @@
 package com.fit.health_insurance.config;
 
-import com.fit.health_insurance.user.service.UserService;
+import com.fit.health_insurance.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

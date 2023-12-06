@@ -12,10 +12,10 @@ import java.util.Map;
 
 @ControllerAdvice
 public class AuthenticationExceptionHandler {
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler(value = {AuthenticationException.class})
     public ResponseEntity<?> handle(RuntimeException ex, HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
-        result.put("errors", ex.getMessage());
+        result.put("error", ex.getMessage());
         return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 

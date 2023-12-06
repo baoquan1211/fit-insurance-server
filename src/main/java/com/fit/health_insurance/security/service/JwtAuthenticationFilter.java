@@ -1,12 +1,14 @@
 package com.fit.health_insurance.security.service;
 
 import com.fit.health_insurance.exception.AuthenticationException;
-import com.fit.health_insurance.user.service.UserService;
+import com.fit.health_insurance.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) throws ServletException, IOException, AuthenticationException {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -36,16 +38,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         final String jwtToken = authHeader.substring(7);
         final String userEmail;
+
         try {
             userEmail = jwtService.extractEmail(jwtToken);
-        } catch (RuntimeException ex) {
-            throw new AuthenticationException("Token is invalid or expired");
+        } catch (ExpiredJwtException ex) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("{\"error\":\"Token is invalid or expired.\"}");
+            response.setContentType("application/json");
+            return;
         }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userService.loadUserByUsername(userEmail);
-            //&& jwtService.isTokenRevoked(jwtToken, (User) userDetails)
-            if (jwtService.isTokenValid(jwtToken, userDetails) ) {
+            if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
