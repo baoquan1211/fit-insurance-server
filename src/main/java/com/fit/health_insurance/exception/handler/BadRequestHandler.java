@@ -1,6 +1,6 @@
 package com.fit.health_insurance.exception.handler;
 
-import com.fit.health_insurance.exception.AuthenticationException;
+import com.fit.health_insurance.exception.BadRequestException;
 import com.fit.health_insurance.exception.EmailExistedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class BadRequestHandler {
-    @ExceptionHandler(EmailExistedException.class)
+    @ExceptionHandler(value = {EmailExistedException.class, BadRequestException.class})
     public ResponseEntity<?> handle(RuntimeException ex, HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         result.put("error", ex.getMessage());
