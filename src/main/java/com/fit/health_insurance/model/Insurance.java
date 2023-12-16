@@ -18,13 +18,13 @@ public class Insurance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private String poster;
     private String description;
-    private Float interestRate;
     private Integer pricePerMonth;
-    private String benefit;
+    private Integer averageBenefit;
+    private Integer minFeePerYear;
     private String detail;
     private boolean isShow;
+    private String logo;
     private Integer totalPayPerYear;
     private Integer inpatientFeePayPerDay;
     private Integer healthCheckFeePayPerYear;

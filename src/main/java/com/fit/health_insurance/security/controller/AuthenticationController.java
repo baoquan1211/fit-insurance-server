@@ -4,6 +4,7 @@ import com.fit.health_insurance.security.service.AuthenticationService;
 import com.fit.health_insurance.security.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public void register(
-            @Valid @RequestBody RegisterRequestDto request
+           @NotNull @Valid @RequestBody RegisterRequestDto request
     ) {
         authenticationService.register(request);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> login(
-            @Valid @RequestBody AuthenticationRequestDto request
+           @NotNull @Valid @RequestBody AuthenticationRequestDto request
     ) throws AuthenticationException {
         return ResponseEntity.ok(authenticationService.login(request));
     }
@@ -34,7 +35,7 @@ public class AuthenticationController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     public void logout(
-            @Valid @RequestBody RefreshTokenRequestDto request
+           @NotNull @Valid @RequestBody RefreshTokenRequestDto request
     ) throws AuthenticationException {
         authenticationService.logout(request);
     }

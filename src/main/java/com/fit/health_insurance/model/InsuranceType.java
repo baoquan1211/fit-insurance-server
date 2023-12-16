@@ -19,8 +19,12 @@ public class InsuranceType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
+    @Column(unique = true)
     private String slug;
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "insurance_id")
+    private String description;
+    private String image;
+    private boolean isActive;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insurance_type_id")
     private List<Insurance> insurances;
 }
