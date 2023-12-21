@@ -6,26 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "insurance_type")
-public class InsuranceType {
+@Table(name = "province")
+public class Province {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    @Column(unique = true)
-    private String slug;
-    private String description;
-    private String advantage;
-    private String image;
+    private String type;
     private boolean isActive;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "insurance_type_id")
-    private List<Insurance> insurances;
 }

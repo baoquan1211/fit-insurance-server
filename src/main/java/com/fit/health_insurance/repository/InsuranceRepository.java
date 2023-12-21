@@ -11,6 +11,5 @@ import java.util.Optional;
 public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
     @Query(value = "SELECT INSURANCE.* FROM INSURANCE INNER JOIN INSURANCE_TYPE ON INSURANCE.INSURANCE_TYPE_ID = INSURANCE_TYPE.ID WHERE INSURANCE_TYPE.SLUG = :slug", nativeQuery = true)
     List<Insurance> findBySlug(@Param("slug") String slug);
-
     Optional<Insurance> findById(Integer id);
 }

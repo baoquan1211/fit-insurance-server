@@ -17,6 +17,7 @@ public class InsuranceTypeDto {
     private String name;
     private String slug;
     private String description;
+    private String advantage;
     private boolean isActive;
     private String image;
 }

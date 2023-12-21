@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,12 @@ public class InsuranceService {
         return repo.findAll().stream().map(this::convertToDto).toList();
     }
 
+    public InsuranceDto findById(Integer id) {
+        var entity = repo.findById(id).orElseThrow(() -> new NotFoundException("Insurance not found."));
+        return convertToDto(entity);
+    }
+
+
     public List<InsuranceDto> findBySlug(String slug) {
         var entities = repo.findBySlug(slug);
         if (entities == null || entities.isEmpty())
@@ -34,7 +41,27 @@ public class InsuranceService {
         return entities.stream().map(this::convertToDto).toList();
     }
 
+    private Integer calculateFeeByAge(Long age, Insurance insurance) {
+        final Map<Integer, Double> feeByAge = Map.of(
+                30, 1.0,
+                40, 1.1,
+                50, 1.2,
+                60, 1.25,
+                70, 1.3,
+                80, 1.4
+        );
+        for (Map.Entry<Integer, Double> entry : feeByAge.entrySet()) {
+            Integer minAge = entry.getKey();
+            Double rate = entry.getValue();
+            if (age < minAge) {
+                return (int) (insurance.getMinFeePerYear() * rate);
+            }
+        }
+        return -1;
+    }
+
     public Integer calculateInsuranceFee(Integer id, CalculateFeeDto request) {
+
         var insurance = repo.findById(id).orElseThrow(() -> new NotFoundException("Insurance not found."));
         var today = LocalDate.now();
         var birthdate = LocalDate.parse(request.getBirthdate());
@@ -42,16 +69,11 @@ public class InsuranceService {
         if (startDate.isBefore(today) || startDate.isEqual(today)){
             throw new BadRequestException("Start date must be after today.");
         }
-        var yearsBetween = birthdate.until(startDate, ChronoUnit.YEARS);
-
-        if (yearsBetween < 30)
-            return (insurance.getMinFeePerYear());
-        if (yearsBetween < 40)
-            return (int) (insurance.getMinFeePerYear() * 1.1);
-        if (yearsBetween < 50)
-            return (int) (insurance.getMinFeePerYear() * 1.2);
-        if (yearsBetween < 70)
-            return (int) (insurance.getMinFeePerYear() * 1.3);
-        return (int) (insurance.getMinFeePerYear() * 1.4);
+        var userAge = birthdate.until(startDate, ChronoUnit.YEARS);
+        var fee = calculateFeeByAge(userAge, insurance);
+        if (fee == -1) {
+            throw new BadRequestException("Not allowed to buy this insurance.");
+        }
+        return fee;
     }
 }

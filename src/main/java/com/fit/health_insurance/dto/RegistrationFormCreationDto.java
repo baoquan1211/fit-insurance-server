@@ -23,6 +23,12 @@ public class RegistrationFormCreationDto {
     @NotEmpty(message = "The phone number is required")
     @Size(min = 10, max = 11, message = "Phone number must be between 10 and 11 numbers")
     private String phone;
+    @NotEmpty(message = "The province is required")
+    private Integer province;
+    @NotEmpty(message = "The district is required")
+    private Integer district;
+    @NotEmpty(message = "The ward is required")
+    private Integer ward;
     @NotEmpty(message = "The address is required")
     private String address;
 }
