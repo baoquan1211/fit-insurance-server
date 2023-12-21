@@ -24,7 +24,10 @@ public class InsuranceController {
     public ResponseEntity<List<InsuranceDto>> findBySlug(@PathVariable("slug") String slug) {
         return ResponseEntity.ok(service.findBySlug(slug));
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<InsuranceDto> findBySlug(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.findById(id));
+    }
     @PostMapping("/{id}/calculate-fee")
     public ResponseEntity<Integer> calculateInsuranceFee(@PathVariable("id") Integer id, @RequestBody @Valid CalculateFeeDto request) {
         return ResponseEntity.ok(service.calculateInsuranceFee(id,request));

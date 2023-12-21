@@ -64,7 +64,6 @@ public class RegistrationFormService {
                     .identityCard(request.getIdentityCard())
                     .address(request.getAddress())
                     .registrator((User) user)
-                    .address(request.getAddress())
                     .name(request.getName())
                     .phone(request.getPhone())
                     .status(RegistrationStatus.PENDING)
