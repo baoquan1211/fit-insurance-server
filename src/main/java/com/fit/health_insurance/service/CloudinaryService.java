@@ -28,7 +28,4 @@ public class CloudinaryService {
         }
     }
 
-    public void save (MultipartFile file) throws IOException {
-
-    }
 }

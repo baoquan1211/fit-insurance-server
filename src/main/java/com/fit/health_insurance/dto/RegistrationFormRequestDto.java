@@ -24,8 +24,8 @@ public class RegistrationFormRequestDto implements Serializable {
     private String email;
     @NotEmpty(message = "The name is required")
     private String name;
-    @NotEmpty(message = "The birthday is required")
-    private String birthday;
+    @NotEmpty(message = "The birthdate is required")
+    private String birthdate;
     @NotEmpty(message = "The identityCard is required")
     @Size(min = 8, max = 12, message = "The identityCard must be 8 or 12 numbers")
     private String identityCard;
