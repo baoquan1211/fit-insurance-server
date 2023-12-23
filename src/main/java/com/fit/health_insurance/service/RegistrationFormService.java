@@ -28,7 +28,7 @@ public class RegistrationFormService {
         return RegistrationFormResponseDto.builder()
                 .phone(entity.getPhone())
                 .address(entity.getAddress())
-                .birthday(entity.getBirthday())
+                .birthday(entity.getBirthdate())
                 .name(entity.getName())
                 .identityCard(entity.getIdentityCard())
                 .files(personalDocumentService.findByRegistrationForm(entity.getId()))
@@ -60,7 +60,7 @@ public class RegistrationFormService {
         var user = userService.loadUserByUsername(request.getEmail());
         if (user != null) {
             RegistrationForm formEntity =  RegistrationForm.builder()
-                    .birthday(LocalDate.parse(request.getBirthday()))
+                    .birthdate(LocalDate.parse(request.getBirthdate()))
                     .identityCard(request.getIdentityCard())
                     .address(request.getAddress())
                     .registrator((User) user)

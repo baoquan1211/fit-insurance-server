@@ -23,7 +23,7 @@ public class RegistrationForm {
     @JoinColumn(name = "registrator_id")
     private User registrator;
     private String name;
-    private LocalDate birthday;
+    private LocalDate birthdate;
     private String identityCard;
     @Size(min = 10, max = 11, message = "Phone number must be between 10 and 11 numbers")
     private String phone;

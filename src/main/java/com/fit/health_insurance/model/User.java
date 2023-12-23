@@ -23,7 +23,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private String address;
 
     @Column(unique = true)
     private String phone;

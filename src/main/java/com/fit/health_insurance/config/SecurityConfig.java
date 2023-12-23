@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers(SecurityConstant.WHITE_LIST_URLS).permitAll()
                                 .anyRequest().authenticated()
 
+
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

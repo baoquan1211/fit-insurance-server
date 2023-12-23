@@ -9,5 +9,6 @@ public final class SecurityConstant {
             "/api/v1/logout",
             "/api/v1/insurances/**",
             "/api/v1/insurance-types/**",
+            "/api/v1/provinces/**",
     };
 }
