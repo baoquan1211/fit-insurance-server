@@ -10,5 +10,7 @@ public final class SecurityConstant {
             "/api/v1/insurances/**",
             "/api/v1/insurance-types/**",
             "/api/v1/provinces/**",
+            "/api/v1/payment/**",
+            "/api/v1/contracts/vnpay-payment"
     };
 }

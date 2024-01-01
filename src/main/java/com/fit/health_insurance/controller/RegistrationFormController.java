@@ -1,6 +1,6 @@
 package com.fit.health_insurance.controller;
 
-import com.fit.health_insurance.dto.RegistrationFormRequestDto;
+import com.fit.health_insurance.dto.RegistrationFormCreationDto;
 import com.fit.health_insurance.dto.RegistrationFormResponseDto;
 import com.fit.health_insurance.service.RegistrationFormService;
 import jakarta.validation.Valid;
@@ -37,7 +37,7 @@ public class RegistrationFormController {
     @PreAuthorize("#request.email == authentication.principal.username")
     @ResponseStatus(HttpStatus.CREATED) // 201
     @PostMapping
-    public void create(@Valid @ModelAttribute RegistrationFormRequestDto request) {
+    public void create(@Valid @ModelAttribute RegistrationFormCreationDto request) {
         registrationFormService.create(request);
     }
 }

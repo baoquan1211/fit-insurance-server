@@ -18,4 +18,6 @@ public class UserController {
     public ResponseEntity<UserDto> findByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
+
+
 }

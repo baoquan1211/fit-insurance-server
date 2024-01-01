@@ -30,4 +30,7 @@ public class Insurance {
     private Integer surgicalFeePayPerYear;
     private Integer medicalVehicleFeePayPerYear;
     private Integer functionalRestorationPayPerYear;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="insurance_type_id")
+    private InsuranceType insuranceType;
 }

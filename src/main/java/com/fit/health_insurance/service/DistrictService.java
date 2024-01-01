@@ -12,16 +12,21 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DistrictService {
-    private final DistrictRepository  districtRepository;
+    private final DistrictRepository repo;
     private final ProvinceService provinceService;
     private final ModelMapper mapper;
 
     public List<DistrictDto> findAllByProvinceId(Integer id) {
         provinceService.findById(id);
-        var districts = districtRepository.findAllByProvinceId(id);
+        var districts = repo.findAllByProvinceId(id);
         if (districts.isEmpty()) {
             throw new NotFoundException("District not found");
         }
         return districts.stream().map(district -> mapper.map(district, DistrictDto.class)).toList();
+    }
+
+    public DistrictDto findById(Integer id) {
+        var district = repo.findById(id).orElseThrow(() -> new NotFoundException("District not found"));
+        return mapper.map(district, DistrictDto.class);
     }
 }

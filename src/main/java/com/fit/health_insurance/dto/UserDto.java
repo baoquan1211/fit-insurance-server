@@ -14,10 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDto {
     private String name;
-    private String address;
     private String phone;
     private String identityCard;
     private String email;
-    @Enumerated(EnumType.STRING)
-    private Role role;
 }

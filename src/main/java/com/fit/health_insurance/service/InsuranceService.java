@@ -30,14 +30,16 @@ public class InsuranceService {
 
     public InsuranceDto findById(Integer id) {
         var entity = repo.findById(id).orElseThrow(() -> new NotFoundException("Insurance not found."));
-        return convertToDto(entity);
+        var dto = convertToDto(entity);
+        dto.setInsuranceTypeId(entity.getInsuranceType().getId());
+        return dto;
     }
 
 
     public List<InsuranceDto> findBySlug(String slug) {
         var entities = repo.findBySlug(slug);
         if (entities == null || entities.isEmpty())
-            throw new NotFoundException("Insurance not found.");
+            throw new NotFoundException("Insurance not found");
         return entities.stream().map(this::convertToDto).toList();
     }
 
@@ -60,19 +62,21 @@ public class InsuranceService {
         return -1;
     }
 
-    public Integer calculateInsuranceFee(Integer id, CalculateFeeDto request) {
-
-        var insurance = repo.findById(id).orElseThrow(() -> new NotFoundException("Insurance not found."));
+    public Integer calculateInsuranceFee(Integer id, String birthdateRequest,  String startDateRequest) {
+        var insurance = repo.findById(id).orElseThrow(() -> new NotFoundException("Insurance not found"));
         var today = LocalDate.now();
-        var birthdate = LocalDate.parse(request.getBirthdate());
-        var startDate = LocalDate.parse(request.getStartDate());
+        var birthdate = LocalDate.parse(birthdateRequest);
+        var startDate = LocalDate.parse(startDateRequest);
+
         if (startDate.isBefore(today) || startDate.isEqual(today)){
-            throw new BadRequestException("Start date must be after today.");
+            throw new BadRequestException("Start date must be after today");
         }
+
         var userAge = birthdate.until(startDate, ChronoUnit.YEARS);
         var fee = calculateFeeByAge(userAge, insurance);
-        if (fee == -1) {
-            throw new BadRequestException("Not allowed to buy this insurance.");
+
+        if (fee < 0) {
+            throw new BadRequestException("Not allowed to buy this insurance");
         }
         return fee;
     }
