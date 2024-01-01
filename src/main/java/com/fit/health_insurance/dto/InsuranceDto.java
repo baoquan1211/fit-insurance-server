@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 public class InsuranceDto {
     private Integer id;
     private String name;
+    private Integer insuranceTypeId;
     private String description;
     private Integer minFeePerYear;
     private String detail;
-    private boolean isShow;
     private String logo;
     private Integer totalPayPerYear;
     private Integer inpatientFeePayPerDay;

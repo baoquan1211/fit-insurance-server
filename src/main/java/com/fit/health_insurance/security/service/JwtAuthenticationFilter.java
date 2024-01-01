@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean matchPath(String path) {
         AtomicBoolean result = new AtomicBoolean(false);
         Arrays.stream(SecurityConstant.WHITE_LIST_URLS).toList().forEach(pattern -> {
-            if (pathMatcher.matchStart(pattern, path)) {
+            if (pathMatcher.match(pattern, path)) {
                 result.set(true);
             }
         });

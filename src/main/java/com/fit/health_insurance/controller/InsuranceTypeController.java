@@ -22,6 +22,11 @@ public class InsuranceTypeController {
     public ResponseEntity<InsuranceTypeDto> findBySlug(@PathVariable("slug") String slug) {
         return ResponseEntity.ok(service.findBySlug(slug));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<InsuranceTypeDto> findBySlug(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.findById(id));
+    }
     @GetMapping
     public ResponseEntity<List<InsuranceTypeDto>> findAll() {
         return ResponseEntity.ok(service.findAll());

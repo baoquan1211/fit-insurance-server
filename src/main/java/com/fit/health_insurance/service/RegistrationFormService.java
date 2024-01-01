@@ -2,7 +2,7 @@ package com.fit.health_insurance.service;
 
 import com.fit.health_insurance.exception.InternalErrorException;
 import com.fit.health_insurance.exception.NotFoundException;
-import com.fit.health_insurance.dto.RegistrationFormRequestDto;
+import com.fit.health_insurance.dto.RegistrationFormCreationDto;
 import com.fit.health_insurance.dto.RegistrationFormResponseDto;
 import com.fit.health_insurance.model.PersonalDocument;
 import com.fit.health_insurance.model.RegistrationForm;
@@ -53,10 +53,10 @@ public class RegistrationFormService {
         if (!registrationFormList.isEmpty()) {
             return registrationFormList.stream().map(this::convertToDto).toList();
         }
-        else throw new NotFoundException("Registration form not found.");
+        else throw new NotFoundException("Registration form not found");
     }
 
-    public void create(RegistrationFormRequestDto request) {
+    public void create(RegistrationFormCreationDto request) {
         var user = userService.loadUserByUsername(request.getEmail());
         if (user != null) {
             RegistrationForm formEntity =  RegistrationForm.builder()
@@ -76,7 +76,7 @@ public class RegistrationFormService {
                     personalDocumentService.upload(documentEntity, image);
                     personalDocumentService.save(documentEntity);
                 } catch (IOException e) {
-                    throw new InternalErrorException("Please try again.");
+                    throw new InternalErrorException("Please try again");
                 }
             }
             registrationFormRepository.save(formEntity);

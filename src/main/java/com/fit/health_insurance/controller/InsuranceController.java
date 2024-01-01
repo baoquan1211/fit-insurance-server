@@ -30,6 +30,6 @@ public class InsuranceController {
     }
     @PostMapping("/{id}/calculate-fee")
     public ResponseEntity<Integer> calculateInsuranceFee(@PathVariable("id") Integer id, @RequestBody @Valid CalculateFeeDto request) {
-        return ResponseEntity.ok(service.calculateInsuranceFee(id,request));
+        return ResponseEntity.ok(service.calculateInsuranceFee(id,request.getBirthdate(), request.getStartDate()));
     }
 }
