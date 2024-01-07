@@ -9,10 +9,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
+
     @Query(value = "SELECT CONTRACT.* FROM CONTRACT INNER JOIN USERS " +
             "ON CONTRACT.BUYER = USERS.ID WHERE USERS.EMAIL = :email", nativeQuery = true)
     List<Contract> findAllByEmail(@Param("email") String email);
+    @Query(value = "SELECT CONTRACT.* FROM CONTRACT INNER JOIN USERS " +
+            "ON CONTRACT.BUYER = USERS.ID AND CONTRACT.STATUS = 'ACTIVE' WHERE USERS.EMAIL = :email", nativeQuery = true)
+    List<Contract> findActiveByEmail(@Param("email") String email);
 
+    @Query(value = "SELECT CONTRACT.* FROM CONTRACT INNER JOIN USERS " +
+            "ON CONTRACT.BUYER = USERS.ID AND CONTRACT.STATUS = 'EXPIRED' OR (CONTRACT.STATUS = 'UNPAID' AND CONTRACT.START_AT <= NOW()) WHERE USERS.EMAIL = :email", nativeQuery = true)
+    List<Contract> findExpiredByEmail(@Param("email") String email);
+
+    @Query(value = "SELECT CONTRACT.* FROM CONTRACT INNER JOIN USERS " +
+            "ON CONTRACT.BUYER = USERS.ID AND (CONTRACT.STATUS = 'INITIAL' OR (CONTRACT.STATUS = 'UNPAID' AND CONTRACT.START_AT > NOW()) ) WHERE USERS.EMAIL = :email", nativeQuery = true)
+    List<Contract> findIncompleteByEmail(@Param("email") String email);
     @Query(value = "SELECT CONTRACT.* FROM CONTRACT INNER JOIN USERS " +
             "ON CONTRACT.INDENTITY_CARD = USERS.ID WHERE USERS.IDENTITYCARD = : identityCard", nativeQuery = true)
     List<Contract> findAllByIdentityCard(@Param("identityCard") String identityCard);

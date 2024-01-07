@@ -2,6 +2,7 @@ package com.fit.health_insurance.service;
 
 import com.fit.health_insurance.config.VnPayConfig;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -10,13 +11,15 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 @Service
+@RequiredArgsConstructor
 public class VnPayService {
+    private final VnPayConfig vnPayConfig;
     public String createOrder(Integer amount, Integer contractId, Integer paymentId, String urlReturn) {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = VnPayConfig.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
-        String vnp_TmnCode = VnPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
         String orderType = "order-type";
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -33,7 +36,7 @@ public class VnPayService {
         String locate = "vn";
         vnp_Params.put("vnp_Locale", locate);
 
-        urlReturn += VnPayConfig.vnp_ReturnUrl;
+        urlReturn += vnPayConfig.vnp_ReturnUrl;
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
@@ -74,7 +77,7 @@ public class VnPayService {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.vnp_HashSecret, hashData.toString());
+        String vnp_SecureHash = VnPayConfig.hmacSHA512(vnPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VnPayConfig.vnp_PayUrl + "?" + queryUrl;
         return paymentUrl;
@@ -100,7 +103,7 @@ public class VnPayService {
         fields.remove("vnp_SecureHashType");
         fields.remove("vnp_SecureHash");
 
-        String signValue = VnPayConfig.hashAllFields(fields);
+        String signValue = vnPayConfig.hashAllFields(fields);
         if (signValue.equals(vnp_SecureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                 return 1; // SUCCESS

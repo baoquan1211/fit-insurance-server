@@ -15,8 +15,9 @@ import java.util.Map;
 public class BadRequestHandler {
     @ExceptionHandler(value = {EmailExistedException.class, BadRequestException.class})
     public ResponseEntity<?> handle(RuntimeException ex, HttpServletRequest request) {
-        Map<String, String> result = new HashMap<>();
+        Map result = new HashMap<>();
         result.put("error", ex.getMessage());
+        result.put("status", 400);
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,5 +1,6 @@
 package com.fit.health_insurance.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +13,14 @@ import java.util.*;
 public class VnPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     @Value("${application.payment.vnpay.return-url}")
-    public static String vnp_ReturnUrl;
+    public String vnp_ReturnUrl;
     @Value("${application.payment.vnpay.terminal-code}")
-    public static String vnp_TmnCode;
+    public String vnp_TmnCode;
     @Value("${application.payment.vnpay.secret-key}")
-    public static String vnp_HashSecret;
+    public String vnp_HashSecret;
 
     //Util for VNPAY
-    public static String hashAllFields(Map fields) {
+    public String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = new StringBuilder();
@@ -36,7 +37,7 @@ public class VnPayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(vnp_HashSecret,sb.toString());
+        return hmacSHA512(this.vnp_HashSecret, sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {

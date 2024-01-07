@@ -10,6 +10,4 @@ import lombok.*;
 public class AuthenticationResponseDto {
     @JsonProperty("access")
     private String accessToken;
-    @JsonProperty("refresh")
-    private String refreshToken;
 }

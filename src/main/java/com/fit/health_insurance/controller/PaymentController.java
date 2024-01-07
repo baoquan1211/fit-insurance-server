@@ -17,7 +17,6 @@ import java.util.List;
 public class PaymentController {
     private final PaymentService service;
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping
     public List<PaymentDto> findAll() {

@@ -21,9 +21,9 @@ public class ValidationExceptionHandler {
 
         ex.getAllErrors().forEach(err -> errors.add(err.getDefaultMessage()));
 
-        Map<String, List<String>> result = new HashMap<>();
+        Map result = new HashMap<>();
         result.put("errors", errors);
-
+        result.put("status", 400);
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 

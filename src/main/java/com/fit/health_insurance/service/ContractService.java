@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +32,19 @@ public class ContractService {
     private final InsuranceService insuranceService;
     private final PaymentService paymentService;
 
-    public List<ContractDto> findByEmail(String email) {
-        var contracts = contractRepository.findAllByEmail(email);
+    public List<ContractDto> findByEmail(String email, String status) {
+        List<Contract> contracts;
+        if (Objects.equals(status, "expired")) {
+            contracts = contractRepository.findExpiredByEmail(email);
+        } else if (Objects.equals(status, "incomplete")) {
+            contracts = contractRepository.findIncompleteByEmail(email);
+        }
+        else if (Objects.equals(status, "active")) {
+            contracts = contractRepository.findActiveByEmail(email);
+        }
+        else {
+            contracts = contractRepository.findAllByEmail(email);
+        }
         if (contracts.isEmpty())
             throw new NotFoundException("No contract found for email " + email);
         return contracts.stream().map(contract -> mapper.map(contract, ContractDto.class)).toList();
@@ -98,6 +110,9 @@ public class ContractService {
 
     public String getVnPayUrl(Integer id) {
         var contract = contractRepository.findById(id).orElseThrow(() -> new NotFoundException("Contract not found"));
+        if (contract.getStartAt().isEqual(LocalDate.now()) || contract.getStartAt().isBefore(LocalDate.now())) {
+            throw new NotFoundException("Payment is expired");
+        }
         if (contract.getStatus() == ContractStatus.ACTIVE || contract.getStatus() == ContractStatus.EXPIRED)
             throw new BadRequestException("Contract have been paid or expired");
         if (contract.getStatus() == ContractStatus.INITIAL) {
