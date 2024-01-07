@@ -24,9 +24,9 @@ public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
     @Value("${application.security.jwt.access-token.expiration}")
-    private long ACCESS_TOKEN_EXPIRATION;
+    private int ACCESS_TOKEN_EXPIRATION;
     @Value("${application.security.jwt.refresh-token.expiration}")
-    private long REFRESH_TOKEN_EXPIRATION;
+    private int REFRESH_TOKEN_EXPIRATION;
 
 
     public String extractEmail(String token) {

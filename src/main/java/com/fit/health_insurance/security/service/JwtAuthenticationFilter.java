@@ -5,6 +5,7 @@ import com.fit.health_insurance.config.SecurityConstant;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +53,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("{\"error\":\"Token is required\",\"status\":401}");
+            response.setContentType("application/json");
             return;
         }
         final String jwtToken = authHeader.substring(7);
@@ -60,9 +63,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             userEmail = jwtService.extractEmail(jwtToken);
-        } catch (ExpiredJwtException ex) {
+        } catch (ExpiredJwtException | MalformedJwtException ex) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write("{\"error\":\"Token is invalid or expired.\"}");
+            response.getWriter().write("{\"error\":\"Token is not valid\",\"status\":401}");
             response.setContentType("application/json");
             return;
         }

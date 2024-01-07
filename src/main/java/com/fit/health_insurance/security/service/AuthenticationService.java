@@ -9,13 +9,20 @@ import com.fit.health_insurance.enums.Role;
 import com.fit.health_insurance.model.User;
 import com.fit.health_insurance.repository.UserRepository;
 import com.fit.health_insurance.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -28,6 +35,8 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private int REFRESH_TOKEN_EXPIRATION;
 
     public void register(RegisterRequestDto request) {
         var user = User.builder()
@@ -56,13 +65,23 @@ public class AuthenticationService {
             throw new AuthenticationException("Email and password do not match");
         }
     }
-    public AuthenticationResponseDto login(AuthenticationRequestDto request) throws AuthenticationException {
-        usernamePasswordAuthentication(request.getEmail(), request.getPassword());
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+    public AuthenticationResponseDto login(AuthenticationRequestDto requestData, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        usernamePasswordAuthentication(requestData.getEmail(), requestData.getPassword());
+        var user = userRepository.findByEmail(requestData.getEmail()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
+
+        ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
+                .maxAge(REFRESH_TOKEN_EXPIRATION)
+                .domain(request.getServerName())
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         saveUserToken(user, refreshToken);
-        return new AuthenticationResponseDto(accessToken, refreshToken);
+        return new AuthenticationResponseDto(accessToken);
     }
 
     public void changePassword(ResetPasswordRequestDto request) throws AuthenticationException {
@@ -72,8 +91,9 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
-    public void logout(RefreshTokenRequestDto request) throws AuthenticationException {
-        jwtService.revokeToken(request.getRefreshToken());
+    public void logout(HttpServletRequest request) throws AuthenticationException {
+        String refreshToken = getCookieValue(request, "refresh");
+        jwtService.revokeToken(refreshToken);
         SecurityContextHolder.clearContext();
     }
 
@@ -86,8 +106,18 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    public RefreshTokenResponseDto refresh(RefreshTokenRequestDto refreshTokenRequest) throws AuthenticationException {
-        final String refreshToken = refreshTokenRequest.getRefreshToken();
+    private String getCookieValue(HttpServletRequest request, String name) {
+        var cookies = request.getCookies();
+        if (cookies == null) return null;
+        return Arrays.stream(cookies)
+                .filter(c -> c.getName().equals(name))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
+    }
+
+    public RefreshTokenResponseDto refresh(HttpServletRequest request) throws AuthenticationException {
+        String refreshToken = getCookieValue(request, "refresh");
         if (refreshToken != null) {
             try {
                 var userEmail = jwtService.extractEmail(refreshToken);
@@ -98,9 +128,9 @@ public class AuthenticationService {
                     return new RefreshTokenResponseDto(accessToken);
                 }
             } catch (RuntimeException ex) {
-                throw new AuthenticationException("Refresh token not valid.");
+                throw new AuthenticationException("Refresh token not valid");
             }
         }
-        throw new AuthenticationException("Refresh token is not valid or expired.");
+        throw new AuthenticationException("Refresh token is not valid or expired");
     }
 }

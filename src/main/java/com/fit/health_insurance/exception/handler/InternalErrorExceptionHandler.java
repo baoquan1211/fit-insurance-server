@@ -15,8 +15,9 @@ import java.util.Map;
 public class InternalErrorExceptionHandler {
     @ExceptionHandler({InternalErrorException.class})
     public ResponseEntity<?> handle(RuntimeException ex, HttpServletRequest request) {
-        Map<String, String> result = new HashMap<>();
+        Map result = new HashMap<>();
         result.put("error", ex.getMessage());
+        result.put("status", 500);
         return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

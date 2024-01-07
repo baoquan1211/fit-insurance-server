@@ -3,6 +3,9 @@ package com.fit.health_insurance.security.controller;
 import com.fit.health_insurance.security.service.AuthenticationService;
 import com.fit.health_insurance.security.dto.*;
 import com.fit.health_insurance.exception.AuthenticationException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +30,14 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> login(
-           @NotNull @Valid @RequestBody AuthenticationRequestDto request
+           @NotNull @Valid @RequestBody AuthenticationRequestDto requestData, HttpServletRequest request, HttpServletResponse response
     ) throws AuthenticationException {
-        return ResponseEntity.ok(authenticationService.login(request));
+        return ResponseEntity.ok(authenticationService.login(requestData, request, response));
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public void logout(
-           @NotNull @Valid @RequestBody RefreshTokenRequestDto request
+    public void logout(HttpServletRequest request
     ) throws AuthenticationException {
         authenticationService.logout(request);
     }
@@ -48,9 +50,8 @@ public class AuthenticationController {
         authenticationService.changePassword(request);
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<RefreshTokenResponseDto> refreshToken(
-            @Valid @RequestBody RefreshTokenRequestDto request
+    @GetMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponseDto> refreshToken(HttpServletRequest request
     ) throws AuthenticationException {
         var RefreshTokenResponseDto = authenticationService.refresh(request);
         return ResponseEntity.ok(RefreshTokenResponseDto);

@@ -14,8 +14,9 @@ import java.util.Map;
 public class AuthenticationExceptionHandler {
     @ExceptionHandler(value = {AuthenticationException.class})
     public ResponseEntity<?> handle(RuntimeException ex, HttpServletRequest request) {
-        Map<String, String> result = new HashMap<>();
+        Map result = new HashMap<>();
         result.put("error", ex.getMessage());
+        result.put("status", 401);
         return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
