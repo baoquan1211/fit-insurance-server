@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -30,13 +32,7 @@ public class ContractDto {
     private InsuranceDto insurance;
     private Integer price;
     private Integer totalPayPerYear;
-    private Integer inpatientFeePayPerDay;
-    private Integer healthCheckFeePayBeforeInpatientPerYear;
-    private Integer healthCheckFeePayAfterInpatientPerYear;
-    private Integer surgicalFeePayPerYear;
-    private Integer medicalVehicleFeePayPerYear;
-    private Integer functionalRestorationPayPerYear;
-
+    private String benefitsId;
     // Contract information
     private LocalDate startAt;
     private LocalDate endAt;

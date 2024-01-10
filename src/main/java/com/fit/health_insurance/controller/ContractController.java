@@ -40,7 +40,6 @@ public class ContractController {
         return service.findByEmail(email, status);
     }
 
-
     @PostAuthorize("returnObject.buyer.email == authentication.principal.username")
     @ResponseStatus(HttpStatus.OK) // 200
     @GetMapping("/{id}")

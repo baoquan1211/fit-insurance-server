@@ -1,22 +1,24 @@
 package com.fit.health_insurance.model;
 
+import com.fit.health_insurance.enums.PayoutRequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
-@Builder
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
-public class Province {
+public class PayoutRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String name;
-    private String type;
-    private boolean isActive;
+    private Date createdAt;
+    @Enumerated(EnumType.STRING)
+    private PayoutRequestStatus status;
 }

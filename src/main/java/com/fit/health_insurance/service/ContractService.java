@@ -8,17 +8,17 @@ import com.fit.health_insurance.exception.BadRequestException;
 import com.fit.health_insurance.exception.NotFoundException;
 import com.fit.health_insurance.model.Contract;
 import com.fit.health_insurance.model.Insurance;
+import com.fit.health_insurance.model.InsuranceBenefit;
 import com.fit.health_insurance.model.User;
 import com.fit.health_insurance.repository.ContractRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.cloudinary.json.JSONArray;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,20 +33,12 @@ public class ContractService {
     private final PaymentService paymentService;
 
     public List<ContractDto> findByEmail(String email, String status) {
-        List<Contract> contracts;
-        if (Objects.equals(status, "expired")) {
-            contracts = contractRepository.findExpiredByEmail(email);
-        } else if (Objects.equals(status, "incomplete")) {
-            contracts = contractRepository.findIncompleteByEmail(email);
-        }
-        else if (Objects.equals(status, "active")) {
-            contracts = contractRepository.findActiveByEmail(email);
-        }
-        else {
-            contracts = contractRepository.findAllByEmail(email);
-        }
-        if (contracts.isEmpty())
-            throw new NotFoundException("No contract found for email " + email);
+        List<Contract> contracts = switch (status) {
+            case "expired" -> contractRepository.findExpiredByEmail(email);
+            case "incomplete" -> contractRepository.findIncompleteByEmail(email);
+            case "active" -> contractRepository.findActiveByEmail(email);
+            case null, default -> contractRepository.findAllByEmail(email);
+        };
         return contracts.stream().map(contract -> mapper.map(contract, ContractDto.class)).toList();
     }
 
@@ -70,6 +62,8 @@ public class ContractService {
         var address = request.getStreet() + ", " + wardDto.getType() + " " + wardDto.getName() + ", " + districtDto.getType() + " " + districtDto.getName() + ", " + provinceDto.getType() + " " + provinceDto.getName();
         var insuranceDto = insuranceService.findById(request.getInsurance());
         var createdAt = new Date();
+        var insurance = mapper.map(insuranceDto, Insurance.class);
+        JSONArray benefitsId = new JSONArray(insurance.getBenefits().stream().map(InsuranceBenefit::getId).toArray());
 
 
         if (buyer != null) {
@@ -86,15 +80,10 @@ public class ContractService {
                     .address(address)
 
                     // Insurance information
-                    .insurance(mapper.map(insuranceDto, Insurance.class))
+                    .insurance(insurance)
                     .price(insuranceService.calculateInsuranceFee(request.getInsurance(), request.getBirthdate(), request.getStartAt()))
                     .totalPayPerYear(insuranceDto.getTotalPayPerYear())
-                    .inpatientFeePayPerDay(insuranceDto.getInpatientFeePayPerDay())
-                    .healthCheckFeePayBeforeInpatientPerYear(insuranceDto.getHealthCheckFeePayBeforeInpatientPerYear())
-                    .healthCheckFeePayAfterInpatientPerYear(insuranceDto.getHealthCheckFeePayAfterInpatientPerYear())
-                    .surgicalFeePayPerYear(insuranceDto.getSurgicalFeePayPerYear())
-                    .medicalVehicleFeePayPerYear(insuranceDto.getMedicalVehicleFeePayPerYear())
-                    .functionalRestorationPayPerYear(insuranceDto.getFunctionalRestorationPayPerYear())
+                    .benefitsId(benefitsId.toString())
 
                     // Contract information
                     .startAt(LocalDate.parse(request.getStartAt()))

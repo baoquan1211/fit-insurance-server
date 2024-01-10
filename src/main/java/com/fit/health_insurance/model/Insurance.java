@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.Mapping;
+
+import java.util.List;
 
 
 @Data
@@ -12,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "insurance")
+@Table
 public class Insurance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +24,7 @@ public class Insurance {
     private String description;
     private Integer minFeePerYear;
     private String detail;
-    private boolean isShow;
+    private boolean isActive;
     private String logo;
     private Integer totalPayPerYear;
     private Integer inpatientFeePayPerDay;
@@ -30,6 +33,8 @@ public class Insurance {
     private Integer surgicalFeePayPerYear;
     private Integer medicalVehicleFeePayPerYear;
     private Integer functionalRestorationPayPerYear;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "insurance")
+    private List<InsuranceBenefit> benefits;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="insurance_type_id")
     private InsuranceType insuranceType;
