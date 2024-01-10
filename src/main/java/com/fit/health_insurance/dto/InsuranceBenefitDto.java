@@ -15,4 +15,5 @@ public class InsuranceBenefitDto {
     private String name;
     private String unit;
     private Integer amount;
+    private Integer insuranceId;
 }

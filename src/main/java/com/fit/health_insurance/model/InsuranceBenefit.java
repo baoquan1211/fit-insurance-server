@@ -20,7 +20,7 @@ public class InsuranceBenefit {
     private String unit;
     private Integer amount;
     private boolean isActive;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "insurance_id")
     private Insurance insurance;
 }
