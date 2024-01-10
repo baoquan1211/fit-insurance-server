@@ -30,9 +30,9 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> login(
-           @NotNull @Valid @RequestBody AuthenticationRequestDto requestData, HttpServletRequest request, HttpServletResponse response
+           @NotNull @Valid @RequestBody AuthenticationRequestDto request, HttpServletResponse response
     ) throws AuthenticationException {
-        return ResponseEntity.ok(authenticationService.login(requestData, request, response));
+        return ResponseEntity.ok(authenticationService.login(request, response));
     }
 
     @GetMapping("/logout")

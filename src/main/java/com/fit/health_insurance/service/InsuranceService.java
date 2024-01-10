@@ -1,6 +1,5 @@
 package com.fit.health_insurance.service;
 
-import com.fit.health_insurance.dto.CalculateFeeDto;
 import com.fit.health_insurance.dto.InsuranceDto;
 import com.fit.health_insurance.exception.BadRequestException;
 import com.fit.health_insurance.exception.NotFoundException;
@@ -8,6 +7,7 @@ import com.fit.health_insurance.model.Insurance;
 import com.fit.health_insurance.repository.InsuranceRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ public class InsuranceService {
     }
 
     public List<InsuranceDto> findAll() {
-        return repo.findAll().stream().map(this::convertToDto).toList();
+        return repo.findAll(Sort.by(Sort.Direction.ASC, "minFeePerYear")).stream().map(this::convertToDto).toList();
     }
 
     public InsuranceDto findById(Integer id) {

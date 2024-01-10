@@ -65,15 +65,14 @@ public class AuthenticationService {
             throw new AuthenticationException("Email and password do not match");
         }
     }
-    public AuthenticationResponseDto login(AuthenticationRequestDto requestData, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        usernamePasswordAuthentication(requestData.getEmail(), requestData.getPassword());
-        var user = userRepository.findByEmail(requestData.getEmail()).orElseThrow();
+    public AuthenticationResponseDto login(AuthenticationRequestDto request, HttpServletResponse response) throws AuthenticationException {
+        usernamePasswordAuthentication(request.getEmail(), request.getPassword());
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
         ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
-                .maxAge(REFRESH_TOKEN_EXPIRATION)
-                .domain(request.getServerName())
+                .maxAge(REFRESH_TOKEN_EXPIRATION / 1000)
                 .sameSite("None")
                 .httpOnly(true)
                 .secure(true)

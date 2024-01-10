@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -24,4 +26,5 @@ public class InsuranceDto {
     private Integer surgicalFeePayPerYear;
     private Integer medicalVehicleFeePayPerYear;
     private Integer functionalRestorationPayPerYear;
+    private List<InsuranceBenefitDto> benefits;
 }
