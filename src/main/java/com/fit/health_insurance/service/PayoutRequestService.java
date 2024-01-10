@@ -6,7 +6,9 @@ import com.fit.health_insurance.enums.ContractStatus;
 import com.fit.health_insurance.enums.PayoutRequestStatus;
 import com.fit.health_insurance.exception.BadRequestException;
 import com.fit.health_insurance.exception.InternalErrorException;
+import com.fit.health_insurance.exception.NotFoundException;
 import com.fit.health_insurance.model.Contract;
+import com.fit.health_insurance.model.HealthDocument;
 import com.fit.health_insurance.model.InsuranceBenefit;
 import com.fit.health_insurance.model.PayoutRequest;
 import com.fit.health_insurance.repository.PayoutRequestRepository;
@@ -14,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.repository.core.RepositoryCreationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -27,6 +31,12 @@ public class PayoutRequestService {
     private final ModelMapper mapper;
     private final InsuranceBenefitService insuranceBenefitService;
     private final ContractService contractService;
+    private final HealthDocumentService healthDocumentService;
+
+    public PayoutRequestDto findById(Integer id) {
+        var request = payoutRequestRepository.findById(id).orElseThrow(() -> new NotFoundException("Payout request not found"));
+        return mapper.map(request, PayoutRequestDto.class);
+    }
 
     public PayoutRequestDto create(PayoutRequestCreationDto request) {
         var contract = contractService.findById(request.getContract());
@@ -36,8 +46,8 @@ public class PayoutRequestService {
         if (!Objects.equals(contract.getBuyer().getEmail(), request.getBuyer())) {
             throw new BadRequestException("Buyer email is not valid");
         }
-        Set<Integer> benefitsId = request.getBenefits();
-        Set<InsuranceBenefit> benefits = new HashSet<InsuranceBenefit>(Set.of());
+        var benefitsId = request.getBenefits();
+        Set<InsuranceBenefit> benefits = new HashSet<>(Set.of());
         Integer totalPay = 0;
         for (Integer benefitId : benefitsId) {
             var benefit = insuranceBenefitService.findById(benefitId);
@@ -58,6 +68,23 @@ public class PayoutRequestService {
             payoutRequestRepository.save(payoutRequest);
         } catch (RepositoryCreationException ex) {
             throw new InternalErrorException(ex.getMessage());
+        }
+
+        var documentList = request.getFile();
+        for (MultipartFile image : documentList) {
+            try {
+                var dotIndex = image.getOriginalFilename().indexOf(".");
+                var documentEntity = HealthDocument.builder()
+
+                        .name(image.getOriginalFilename().substring(0,dotIndex))
+                        .createdAt(new Date())
+                        .payoutRequest(payoutRequest)
+                        .build();
+                healthDocumentService.upload(documentEntity, image);
+                healthDocumentService.save(documentEntity);
+            } catch (IOException e) {
+                throw new InternalErrorException("Can not update file");
+            }
         }
         return mapper.map(payoutRequest, PayoutRequestDto.class);
     }

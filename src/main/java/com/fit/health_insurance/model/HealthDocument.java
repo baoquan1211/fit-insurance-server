@@ -2,15 +2,19 @@ package com.fit.health_insurance.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@Builder
 @Entity
 @AllArgsConstructor
-@Table(name = "personal_document")
-public class PersonalDocument {
+@NoArgsConstructor
+@Table(name = "health_document")
+public class HealthDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -18,15 +22,6 @@ public class PersonalDocument {
     private Date createdAt;
     private String URL;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "registration_form_id")
-    private RegistrationForm registrationForm;
-
-    public PersonalDocument() {
-        this.createdAt = new Date();
-    }
-
-    public PersonalDocument(RegistrationForm formEntity) {
-        this.registrationForm = formEntity;
-        this.createdAt = new Date();
-    }
+    @JoinColumn(name = "request_id")
+    private PayoutRequest payoutRequest;
 }

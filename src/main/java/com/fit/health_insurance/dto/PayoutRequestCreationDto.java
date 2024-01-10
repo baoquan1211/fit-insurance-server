@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -22,4 +24,6 @@ public class PayoutRequestCreationDto implements Serializable {
     private Integer contract;
     @Email(message = "The buyer email is not valid")
     private String buyer;
+    @NotNull(message = "The file must be provided at least one")
+    List<MultipartFile> file;
 }

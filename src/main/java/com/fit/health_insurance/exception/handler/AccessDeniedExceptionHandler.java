@@ -1,5 +1,7 @@
 package com.fit.health_insurance.exception.handler;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,8 +14,8 @@ import java.util.Map;
 
 
 @ControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class AccessDeniedExceptionHandler extends ResponseEntityExceptionHandler {
-
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity handleAccessDeniedException() {
         Map result = new HashMap<>();

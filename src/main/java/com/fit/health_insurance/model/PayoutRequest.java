@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,5 +34,8 @@ public class PayoutRequest {
     @ManyToOne
     @JoinColumn(name = "contract_id")
     private Contract contract;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id")
+    private List<HealthDocument> documents;
     private Integer totalPay;
 }
