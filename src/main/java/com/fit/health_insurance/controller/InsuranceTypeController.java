@@ -1,8 +1,6 @@
 package com.fit.health_insurance.controller;
 
-import com.fit.health_insurance.dto.InsuranceDto;
 import com.fit.health_insurance.dto.InsuranceTypeDto;
-import com.fit.health_insurance.service.InsuranceService;
 import com.fit.health_insurance.service.InsuranceTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
