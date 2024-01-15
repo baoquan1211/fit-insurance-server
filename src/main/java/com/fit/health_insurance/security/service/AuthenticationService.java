@@ -37,6 +37,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private int REFRESH_TOKEN_EXPIRATION;
+    @Value("${application.security.client_domain}")
+    private String CLIENT_DOMAIN;
 
     public void register(RegisterRequestDto request) {
         var user = User.builder()
@@ -70,12 +72,12 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-
         ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
                 .maxAge(REFRESH_TOKEN_EXPIRATION / 1000)
-                .sameSite("None")
+                .sameSite("Lax")
                 .httpOnly(true)
                 .secure(true)
+                .domain(CLIENT_DOMAIN)
                 .path("/")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

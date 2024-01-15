@@ -1,7 +1,7 @@
 package com.fit.health_insurance.security.service;
 
 
-import com.fit.health_insurance.config.SecurityConstant;
+import com.fit.health_insurance.config.SecurityConfig;
 import com.fit.health_insurance.exception.AuthenticationException;
 import com.fit.health_insurance.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final PathMatcher pathMatcher;
     private boolean matchPath(String path) {
         AtomicBoolean result = new AtomicBoolean(false);
-        Arrays.stream(SecurityConstant.WHITE_LIST_URLS).toList().forEach(pattern -> {
+        Arrays.stream(SecurityConfig.WHITE_LIST_URLS).toList().forEach(pattern -> {
             if (pathMatcher.match(pattern, path)) {
                 result.set(true);
             }

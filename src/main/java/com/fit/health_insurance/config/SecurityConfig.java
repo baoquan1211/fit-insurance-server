@@ -32,6 +32,25 @@ import java.util.List;
 @EnableMethodSecurity
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SecurityConfig {
+    public static final String[] WHITE_LIST_URLS = {
+            // api documentation
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            // auth endpoint
+            "/api/v1/login",
+            "/api/v1/register",
+            "/api/v1/refresh",
+            "/api/v1/logout",
+            // public endpoint
+            "/api/v1/insurances/**",
+            "/api/v1/insurance-types/**",
+            "/api/v1/provinces/**",
+            "/api/v1/payment/**",
+            "/api/v1/contracts/vnpay-payment",
+    };
     @Value("${application.security.client_url}")
     private String CLIENT_URL;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -58,7 +77,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers(SecurityConstant.WHITE_LIST_URLS).permitAll()
+                                .requestMatchers(SecurityConfig.WHITE_LIST_URLS).permitAll()
                                 .anyRequest().authenticated()
 
 
