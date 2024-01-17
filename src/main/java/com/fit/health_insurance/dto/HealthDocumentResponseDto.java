@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HealthDocumentResponseDto {
     private String name;
-    private String URL;
+    private String url;
 }

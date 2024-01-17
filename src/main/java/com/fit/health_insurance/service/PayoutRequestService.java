@@ -38,6 +38,22 @@ public class PayoutRequestService {
         return mapper.map(request, PayoutRequestDto.class);
     }
 
+    public void updateStatus(Integer id, String status) {
+        var request = payoutRequestRepository.findById(id).orElseThrow(() -> new NotFoundException("Payout request not found"));
+        if (request.getStatus().equals(PayoutRequestStatus.PENDING)) {
+            if (Objects.equals(status, "ACCEPTED")) {
+                request.setStatus(PayoutRequestStatus.ACCEPTED);
+                var contract = contractService.findById(request.getContract().getId());
+                Integer totalPaid = payoutRequestRepository.getTotalPayoutByContract(request.getContract().getId());
+                if (totalPaid > contract.getTotalPayPerYear()) {
+                    throw new BadRequestException("Total pay per year reached");
+                }
+            }
+            else request.setStatus(PayoutRequestStatus.REJECTED);
+            payoutRequestRepository.save(request);
+        }
+    }
+
     public PayoutRequestDto create(PayoutRequestCreationDto request) {
         var contract = contractService.findById(request.getContract());
         if (!Objects.equals(contract.getStatus(), ContractStatus.ACTIVE.toString())) {
@@ -70,7 +86,7 @@ public class PayoutRequestService {
             throw new InternalErrorException(ex.getMessage());
         }
 
-        var documentList = request.getFile();
+        var documentList = request.getFiles();
         for (MultipartFile image : documentList) {
             try {
                 var dotIndex = image.getOriginalFilename().indexOf(".");

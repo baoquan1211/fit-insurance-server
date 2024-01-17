@@ -97,7 +97,7 @@ public class ContractService {
         } else throw new NotFoundException("User not found");
     }
 
-    public String getVnPayUrl(Integer id) {
+    public String getVnPayUrl(Integer id, String ipAddress) {
         var contract = contractRepository.findById(id).orElseThrow(() -> new NotFoundException("Contract not found"));
         if (contract.getStartAt().isEqual(LocalDate.now()) || contract.getStartAt().isBefore(LocalDate.now())) {
             throw new NotFoundException("Payment is expired");
@@ -108,7 +108,7 @@ public class ContractService {
             contract.setStatus(ContractStatus.UNPAID);
             contractRepository.save(contract);
         }
-        return paymentService.vnPayCreateUrl(contract);
+        return paymentService.vnPayCreateUrl(contract, ipAddress);
     }
 
     public void paymentCheck(Integer contractId, Integer paymentId, HttpServletRequest request) {

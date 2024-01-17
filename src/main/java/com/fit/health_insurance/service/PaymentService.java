@@ -30,7 +30,7 @@ public class PaymentService {
     private final VnPayService vnPayService;
     private final ModelMapper mapper;
 
-    public String vnPayCreateUrl(Contract contract) {
+    public String vnPayCreateUrl(Contract contract, String ipAddress) {
         Integer amount = contract.getPrice();
         Integer contractId = contract.getId();
         if (contractId == null || amount == null)
@@ -43,7 +43,7 @@ public class PaymentService {
                 .build();
         String baseUrl = "http://" + SERVER_HOST + ":" + SERVER_PORT;
         repo.save(newPayment);
-        return vnPayService.createOrder(amount, contractId,  newPayment.getId(), baseUrl);
+        return vnPayService.createOrder(amount, contractId,  newPayment.getId(), baseUrl, ipAddress);
     }
 
     public Integer paymentCheck(Integer paymentId, HttpServletRequest request)  {

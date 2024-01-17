@@ -14,11 +14,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class VnPayService {
     private final VnPayConfig vnPayConfig;
-    public String createOrder(Integer amount, Integer contractId, Integer paymentId, String urlReturn) {
+    public String createOrder(Integer amount, Integer contractId, Integer paymentId, String urlReturn, String ipAddress) {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = VnPayConfig.getRandomNumber(8);
-        String vnp_IpAddr = "127.0.0.1";
         String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
         String orderType = "order-type";
 
@@ -38,7 +37,7 @@ public class VnPayService {
 
         urlReturn += vnPayConfig.vnp_ReturnUrl;
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
-        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+        vnp_Params.put("vnp_IpAddr", ipAddress);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

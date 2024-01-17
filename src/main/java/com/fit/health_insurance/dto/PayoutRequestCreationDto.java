@@ -25,5 +25,5 @@ public class PayoutRequestCreationDto implements Serializable {
     @Email(message = "The buyer email is not valid")
     private String buyer;
     @NotNull(message = "The file must be provided at least one")
-    List<MultipartFile> file;
+    List<MultipartFile> files;
 }
