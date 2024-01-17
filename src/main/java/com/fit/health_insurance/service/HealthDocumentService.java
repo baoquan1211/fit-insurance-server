@@ -31,7 +31,7 @@ public class HealthDocumentService {
 
     public HealthDocumentResponseDto convertToDto(HealthDocument entity) {
         return HealthDocumentResponseDto.builder()
-                .URL(entity.getURL())
+                .url(entity.getURL())
                 .name(entity.getName())
                 .build();
     }

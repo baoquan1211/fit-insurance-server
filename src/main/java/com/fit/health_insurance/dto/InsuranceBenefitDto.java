@@ -16,4 +16,5 @@ public class InsuranceBenefitDto {
     private String unit;
     private Integer amount;
     private Integer insuranceId;
+    private boolean isActive;
 }

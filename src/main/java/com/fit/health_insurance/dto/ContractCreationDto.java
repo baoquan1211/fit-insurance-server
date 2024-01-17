@@ -1,5 +1,6 @@
 package com.fit.health_insurance.dto;
 
+import com.fit.health_insurance.exception.BadRequestException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -46,4 +47,9 @@ public class ContractCreationDto implements Serializable {
 
     // Contract information
     private String startAt;
+
+    public void validate() {
+        if (!this.name.matches("^[A-Z\s]+$"))
+            throw new BadRequestException("Tên in hoa không chứa dấu hay ký tự đặc biệt");
+    }
 }

@@ -6,14 +6,12 @@ import com.fit.health_insurance.service.ContractService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +28,7 @@ public class ContractController {
     @ResponseStatus(HttpStatus.CREATED) // 201
     @PostMapping
     public ContractDto create(@Valid @RequestBody ContractCreationDto request) {
+        request.validate();
         return service.create(request);
     }
 
@@ -49,8 +48,12 @@ public class ContractController {
 
     @ResponseStatus(HttpStatus.OK) // 200
     @PostMapping("/{id}/payment/vnpay")
-    public String getPaymentUrl(@PathVariable Integer id) {
-        return service.getVnPayUrl(id);
+    public String getPaymentUrl(@PathVariable Integer id, HttpServletRequest request) {
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = request.getRemoteAddr();
+        }
+        return service.getVnPayUrl(id, ipAddress);
     }
 
     @ResponseStatus(HttpStatus.OK) // 200

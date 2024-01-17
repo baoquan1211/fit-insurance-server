@@ -24,6 +24,7 @@ public class AuthenticationController {
     public void register(
             @NotNull @Valid @RequestBody RegisterRequestDto request
     ) {
+        request.validate();
         authenticationService.register(request);
     }
 
@@ -45,6 +46,7 @@ public class AuthenticationController {
     public void changePassword(
             @Valid @RequestBody ResetPasswordRequestDto request
     ) {
+        request.validate();
         authenticationService.changePassword(request);
     }
 
