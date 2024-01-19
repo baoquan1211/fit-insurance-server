@@ -24,7 +24,7 @@ public class ContractController {
     @Value("${application.client.payment-return-url}")
     private String CLIENT_PAYMENT_RETURN_URL;
 
-    @PreAuthorize("#request.buyer  == authentication.principal.username")
+    @PreAuthorize("#request.buyer == authentication.principal.username")
     @ResponseStatus(HttpStatus.CREATED) // 201
     @PostMapping
     public ContractDto create(@Valid @RequestBody ContractCreationDto request) {
@@ -35,7 +35,7 @@ public class ContractController {
     @PreAuthorize("#email == authentication.principal.username")
     @ResponseStatus(HttpStatus.OK) // 200
     @GetMapping
-    public List<ContractDto> findByEmail(@RequestParam String email, @RequestParam(defaultValue = "all") String status) {
+    public List<ContractDto> findByEmail(@RequestParam String email, @RequestParam(defaultValue = "all", required = false) String status) {
         return service.findByEmail(email, status);
     }
 

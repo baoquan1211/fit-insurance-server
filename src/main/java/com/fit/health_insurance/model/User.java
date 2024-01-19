@@ -35,6 +35,7 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String avatarUrl;
     private Boolean isActive;
     private Date createdAt;
     

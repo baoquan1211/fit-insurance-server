@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/payout-request")
 @RequiredArgsConstructor
@@ -20,6 +22,13 @@ public class PayoutRequestController {
     @PreAuthorize("#request.buyer == authentication.principal.username")
         PayoutRequestDto create(@Valid @ModelAttribute PayoutRequestCreationDto request) {
         return service.create(request);
+    }
+
+    @PreAuthorize("#email == authentication.principal.username")
+    @ResponseStatus(HttpStatus.OK) // 200
+    @GetMapping
+    public List<PayoutRequestDto> findByEmail(@RequestParam String email, @RequestParam(defaultValue = "all", required = false) String status) {
+        return service.findByEmail(email, status);
     }
 
     @GetMapping("/{id}")

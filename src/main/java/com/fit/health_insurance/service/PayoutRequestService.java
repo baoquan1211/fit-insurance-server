@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +30,15 @@ public class PayoutRequestService {
     private final ContractService contractService;
     private final HealthDocumentService healthDocumentService;
 
+    public List<PayoutRequestDto> findByEmail(String email, String status) {
+        List<PayoutRequest> requests = switch (status) {
+            case "pending" -> payoutRequestRepository.findPendingByEmail(email);
+            case "accepted" -> payoutRequestRepository.findAcceptedByEmail(email);
+            case "rejected" -> payoutRequestRepository.findRejectedByEmail(email);
+            case null, default -> payoutRequestRepository.findAllByEmail(email);
+        };
+        return requests.stream().map(request -> mapper.map(request, PayoutRequestDto.class)).toList();
+    }
     public PayoutRequestDto findById(Integer id) {
         var request = payoutRequestRepository.findById(id).orElseThrow(() -> new NotFoundException("Payout request not found"));
         return mapper.map(request, PayoutRequestDto.class);
@@ -89,7 +95,7 @@ public class PayoutRequestService {
         var documentList = request.getFiles();
         for (MultipartFile image : documentList) {
             try {
-                var dotIndex = image.getOriginalFilename().indexOf(".");
+                var dotIndex = Objects.requireNonNull(image.getOriginalFilename()).indexOf(".");
                 var documentEntity = HealthDocument.builder()
 
                         .name(image.getOriginalFilename().substring(0,dotIndex))

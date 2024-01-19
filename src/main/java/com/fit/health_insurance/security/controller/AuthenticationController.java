@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -41,7 +42,8 @@ public class AuthenticationController {
         authenticationService.logout(request);
     }
 
-    @PutMapping("/change-password")
+    @PatchMapping("/change-password")
+//    @PreAuthorize("#request.email == authentication.principal.username")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(
             @Valid @RequestBody ResetPasswordRequestDto request

@@ -2,11 +2,13 @@ package com.fit.health_insurance.service;
 
 import com.fit.health_insurance.dto.InsuranceTypeDto;
 import com.fit.health_insurance.exception.NotFoundException;
+import com.fit.health_insurance.model.InsuranceType;
 import com.fit.health_insurance.repository.InsuranceTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -26,6 +28,6 @@ public class InsuranceTypeService {
 
     public List<InsuranceTypeDto> findAll() {
         var entities = repo.findAll();
-        return entities.stream().map(entity -> mapper.map(entity, InsuranceTypeDto.class)).toList();
+        return entities.stream().sorted(Comparator.comparingInt(InsuranceType::getId)).map(entity -> mapper.map(entity, InsuranceTypeDto.class)).toList();
     }
 }

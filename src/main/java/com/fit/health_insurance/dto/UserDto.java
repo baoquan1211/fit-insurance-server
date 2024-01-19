@@ -1,8 +1,6 @@
 package com.fit.health_insurance.dto;
 
-import com.fit.health_insurance.enums.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +15,5 @@ public class UserDto {
     private String phone;
     private String identityCard;
     private String email;
+    private String avatarUrl;
 }

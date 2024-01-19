@@ -1,0 +1,31 @@
+id,amount,is_active,name,unit,insurance_id
+1,2000000,t,Chi phí nằm viện,Số tiền/ngày,1
+2,2000000,t,Chi phí khám và điều trị trong vòng 30 ngày trước khi nhập viện,Số tiền/năm,1
+3,2000000,t,Chi phí khám và điều trị trong vòng 30 ngày sau khi nhập viện,Số tiền/năm,1
+4,5000000,t,"Dịch vụ xe cứu thương, xe cấp cứu bằng đường bộ",Số tiền/năm,1
+6,4000000,t,Phục hồi chức năng,Số tiền/năm,1
+7,5000000,t,Chi phí nằm viện,Số tiền/ngày,3
+8,5000000,t,Chi phí khám và điều trị trong vòng 30 ngày trước khi nhập viện,Số tiền/năm,3
+9,5000000,t,Chi phí khám và điều trị trong vòng 30 ngày sau khi nhập viện,Số tiền/năm,3
+10,10000000,t,"Dịch vụ xe cứu thương, xe cấp cứu bằng đường bộ",Số tiền/năm,3
+11,100000000,t,Chi phí phẫu thuật,Số tiền/năm,3
+12,10000000,t,Phục hồi chức năng,Số tiền/năm,3
+14,3000000,t,Chi phí khám và điều trị trong vòng 30 ngày trước khi nhập viện,Số tiền/năm,2
+15,3000000,t,Chi phí khám và điều trị trong vòng 30 ngày sau khi nhập viện,Số tiền/năm,2
+16,5000000,t,"Dịch vụ xe cứu thương, xe cấp cứu bằng đường bộ",Số tiền/năm,2
+17,60000000,t,Chi phí phẫu thuật,Số tiền/năm,2
+18,6000000,t,Phục hồi chức năng,Số tiền/năm,2
+19,7500000,t,Chi phí nằm viện,Số tiền/ngày,4
+20,7500000,t,Chi phí khám và điều trị trong vòng 30 ngày trước khi nhập viện,Số tiền/năm,4
+21,7500000,t,Chi phí khám và điều trị trong vòng 30 ngày sau khi nhập viện,Số tiền/năm,4
+23,150000000,t,Chi phí phẫu thuật,Số tiền/năm,4
+24,15000000,t,Phục hồi chức năng,Số tiền/năm,4
+25,10000000,t,Chi phí nằm viện,Số tiền/ngày,5
+26,10000000,t,Chi phí khám và điều trị trong vòng 30 ngày trước khi nhập viện,Số tiền/năm,5
+27,10000000,t,Chi phí khám và điều trị trong vòng 30 ngày sau khi nhập viện,Số tiền/năm,5
+28,10000000,t,"Dịch vụ xe cứu thương, xe cấp cứu bằng đường bộ",Số tiền/năm,5
+29,200000000,t,Chi phí phẫu thuật,Số tiền/năm,5
+30,20000000,t,Phục hồi chức năng,Số tiền/năm,5
+13,3000000,t,Chi phí nằm viện,Số tiền/ngày,2
+5,40000000,t,Chi phí phẫu thuật,Số tiền/năm,1
+22,10000000,t,"Dịch vụ xe cứu thương, xe cấp cứu bằng đường bộ",Số tiền/năm,4

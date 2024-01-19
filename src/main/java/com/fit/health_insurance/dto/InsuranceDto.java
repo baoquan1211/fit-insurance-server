@@ -15,16 +15,8 @@ public class InsuranceDto {
     private Integer id;
     private String name;
     private Integer insuranceTypeId;
-    private String description;
     private Integer minFeePerYear;
-    private String detail;
     private String logo;
     private Integer totalPayPerYear;
-    private Integer inpatientFeePayPerDay;
-    private Integer healthCheckFeePayBeforeInpatientPerYear;
-    private Integer healthCheckFeePayAfterInpatientPerYear;
-    private Integer surgicalFeePayPerYear;
-    private Integer medicalVehicleFeePayPerYear;
-    private Integer functionalRestorationPayPerYear;
     private List<InsuranceBenefitDto> benefits;
 }

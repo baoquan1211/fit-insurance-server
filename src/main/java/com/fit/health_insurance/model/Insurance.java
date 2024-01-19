@@ -21,18 +21,10 @@ public class Insurance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private String description;
     private Integer minFeePerYear;
-    private String detail;
     private boolean isActive;
     private String logo;
     private Integer totalPayPerYear;
-    private Integer inpatientFeePayPerDay;
-    private Integer healthCheckFeePayBeforeInpatientPerYear;
-    private Integer healthCheckFeePayAfterInpatientPerYear;
-    private Integer surgicalFeePayPerYear;
-    private Integer medicalVehicleFeePayPerYear;
-    private Integer functionalRestorationPayPerYear;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "insurance")
     private List<InsuranceBenefit> benefits;
     @ManyToOne(fetch = FetchType.LAZY)
