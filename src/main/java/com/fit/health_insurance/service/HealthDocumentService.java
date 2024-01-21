@@ -25,7 +25,7 @@ public class HealthDocumentService {
         return healthDocumentRepository.findById(id);
     }
     public void upload(HealthDocument healthDocument, MultipartFile file) throws IOException {
-        var imageUrl = cloudinaryService.uploadImage(file);
+        var imageUrl = cloudinaryService.upload(file);
         healthDocument.setURL(imageUrl);
     }
 

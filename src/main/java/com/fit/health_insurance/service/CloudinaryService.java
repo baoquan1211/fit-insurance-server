@@ -15,7 +15,7 @@ import java.util.UUID;
 public class CloudinaryService {
     private final Cloudinary cloudinary;
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String upload(MultipartFile file) throws IOException {
         try {
             return cloudinary.uploader()
                     .upload(file.getBytes(),
@@ -27,5 +27,7 @@ public class CloudinaryService {
             throw new InterruptedIOException("Can not upload image.");
         }
     }
+
+
 
 }

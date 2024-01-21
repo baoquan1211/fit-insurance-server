@@ -1,8 +1,11 @@
 package com.fit.health_insurance.controller;
 
 import com.fit.health_insurance.dto.UserDto;
+import com.fit.health_insurance.dto.UserUpdateRequest;
 import com.fit.health_insurance.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,5 +22,10 @@ public class UserController {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
 
-
+    @PreAuthorize("#request.email == authentication.principal.username")
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto update (@Valid @ModelAttribute UserUpdateRequest request) {
+        return userService.update(request);
+    }
 }

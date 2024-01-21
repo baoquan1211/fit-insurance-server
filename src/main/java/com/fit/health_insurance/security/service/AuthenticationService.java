@@ -85,7 +85,7 @@ public class AuthenticationService {
         return new AuthenticationResponseDto(accessToken);
     }
 
-    public void changePassword(ResetPasswordRequestDto request) throws AuthenticationException {
+    public void changePassword(ResetPasswordRequestDto request)  {
         usernamePasswordAuthentication(request.getEmail(), request.getLastPassword());
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
