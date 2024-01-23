@@ -19,7 +19,7 @@ public class CloudinaryService {
         try {
             return cloudinary.uploader()
                     .upload(file.getBytes(),
-                            ObjectUtils.asMap("public_id", "fit-insurance/" + UUID.randomUUID().toString()))
+                            ObjectUtils.asMap("public_id", "fit-insurance/" + UUID.randomUUID()))
                     .get("url")
                     .toString();
         }
@@ -28,6 +28,20 @@ public class CloudinaryService {
         }
     }
 
+    private String getIdFromUrl(String url) {
+        int startIndex = url.lastIndexOf("/") + 1;
+        int UUID_LENGTH = 36;
+        return url.substring(startIndex, startIndex + UUID_LENGTH);
+    }
 
+    public void delete(String url) throws IOException {
+        try {
+            String publicId = getIdFromUrl(url);
+            cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("type", "upload", "resource_type", "image", "invalidate", "true"));
+        }
+        catch(RuntimeException ex) {
+            throw new InterruptedIOException("Can not delete image.");
+        }
+    }
 
 }

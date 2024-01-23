@@ -38,4 +38,5 @@ public class PayoutRequest {
     @JoinColumn(name = "request_id")
     private List<HealthDocument> documents;
     private Integer totalPay;
+    private String message;
 }

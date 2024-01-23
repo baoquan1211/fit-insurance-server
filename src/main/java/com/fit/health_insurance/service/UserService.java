@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -30,7 +32,14 @@ public class UserService implements UserDetailsService {
         user.setIdentityCard(request.getIdentifyCard());
         try {
             if (request.getAvatarFile() != null) {
+                String lastUrl = user.getAvatarUrl();
                 user.setAvatarUrl(cloudinaryService.upload(request.getAvatarFile()));
+                try {
+                    cloudinaryService.delete(lastUrl);
+                }
+                catch (IOException e) {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
             }
         } catch (Exception e) {
             throw new InternalErrorException("Could not upload avatar");

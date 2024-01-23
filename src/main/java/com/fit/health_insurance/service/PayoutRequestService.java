@@ -1,5 +1,6 @@
 package com.fit.health_insurance.service;
 
+import com.fit.health_insurance.dto.PageableResponseDto;
 import com.fit.health_insurance.dto.PayoutRequestCreationDto;
 import com.fit.health_insurance.dto.PayoutRequestDto;
 import com.fit.health_insurance.enums.ContractStatus;
@@ -14,6 +15,9 @@ import com.fit.health_insurance.model.PayoutRequest;
 import com.fit.health_insurance.repository.PayoutRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.core.RepositoryCreationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +34,15 @@ public class PayoutRequestService {
     private final ContractService contractService;
     private final HealthDocumentService healthDocumentService;
 
+    public PageableResponseDto<PayoutRequestDto> findAll(Integer page, Integer pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+        var pageableEntities = payoutRequestRepository.findAll(pageable);
+        var dtoList = pageableEntities.stream().map(request -> mapper.map(request, PayoutRequestDto.class)).toList();
+        PageableResponseDto response = new PageableResponseDto<>(pageableEntities);
+        response.setContent(dtoList);
+        return response;
+    }
+
     public List<PayoutRequestDto> findByEmail(String email, String status) {
         List<PayoutRequest> requests = switch (status) {
             case "pending" -> payoutRequestRepository.findPendingByEmail(email);
@@ -44,7 +57,7 @@ public class PayoutRequestService {
         return mapper.map(request, PayoutRequestDto.class);
     }
 
-    public void updateStatus(Integer id, String status) {
+    public void updateStatus(Integer id, String status, String message) {
         var request = payoutRequestRepository.findById(id).orElseThrow(() -> new NotFoundException("Payout request not found"));
         if (request.getStatus().equals(PayoutRequestStatus.PENDING)) {
             if (Objects.equals(status, "ACCEPTED")) {
@@ -55,9 +68,13 @@ public class PayoutRequestService {
                     throw new BadRequestException("Total pay per year reached");
                 }
             }
-            else request.setStatus(PayoutRequestStatus.REJECTED);
+            else {
+                request.setMessage(message);
+                request.setStatus(PayoutRequestStatus.REJECTED);
+            }
             payoutRequestRepository.save(request);
         }
+        else throw new BadRequestException("Payout request is accepted or rejected");
     }
 
     public PayoutRequestDto create(PayoutRequestCreationDto request) {

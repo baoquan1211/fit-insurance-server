@@ -125,7 +125,6 @@ public class AuthenticationService {
                 var user = userService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(refreshToken, user) && jwtService.isTokenRevoked(refreshToken, (User) user)) {
                     var accessToken = jwtService.generateAccessToken(user);
-                    saveUserToken((User) user, accessToken);
                     return new RefreshTokenResponseDto(accessToken);
                 }
             } catch (RuntimeException ex) {

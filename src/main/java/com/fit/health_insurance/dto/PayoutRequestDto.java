@@ -24,4 +24,5 @@ public class PayoutRequestDto {
     private Integer contractId;
     private Integer totalPay;
     private List<HealthDocumentResponseDto> documents;
+    private String message;
 }
