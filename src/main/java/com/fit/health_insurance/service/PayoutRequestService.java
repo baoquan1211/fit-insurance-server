@@ -50,7 +50,7 @@ public class PayoutRequestService {
             case "rejected" -> payoutRequestRepository.findRejectedByEmail(email);
             case null, default -> payoutRequestRepository.findAllByEmail(email);
         };
-        return requests.stream().map(request -> mapper.map(request, PayoutRequestDto.class)).toList();
+        return requests.stream().sorted((o1, o2) -> o2.getId() - o1.getId()).map(request -> mapper.map(request, PayoutRequestDto.class)).toList();
     }
     public PayoutRequestDto findById(Integer id) {
         var request = payoutRequestRepository.findById(id).orElseThrow(() -> new NotFoundException("Payout request not found"));

@@ -35,3 +35,7 @@ build/
 **/application.yml
 
 venv/
+
+docker-compose.yml
+Dockerfile
+.Dockerignore

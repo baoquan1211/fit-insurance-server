@@ -78,15 +78,13 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        User user = (User) userDetails;
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-//                .claim("authorities",
-//                        grantedAuthorities.stream()
-//                                .map(GrantedAuthority::getAuthority)
-//                                .collect(Collectors.toList()))
+                .claim("role",user.getRole().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
